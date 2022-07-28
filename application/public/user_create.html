@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Create User
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <h2 style="background-color: paleturquoise;">User CA Create</h2>
+        <p>새롭게 만들 사용자의 이름과 department를 입력하십시오.</p>
+        <hr>
+
+        <label for="name" class="form-label">User Name:</label><br>
+        <input type="text" id="m-name" name="m-name" class="form-control" placeholder="appUser"><br>
+        <label for="department" class="form-label">User Department:</label><br>
+        <input type="text" id="m-department" name="m-department" class="form-control"
+            placeholder="org1.department1"><br>
+
+        <button id="btn_create" class="btn btn-success">사용자 인증서 생성</button>
+        <a href="/" class="btn btn-secondary">돌아가기</a>
+
+        <hr>
+        <div id="result"></div>
+        <hr>
+        <div id="result_str"></div>
+        <div id="result_table"></div>
+        <br>
+    </div>
+
+
+
+</body>
+<script>
+    $('#btn_create').click(function () {
+        console.log('button pressed');
+        var name = $('#m-name').val(); //input id의 val값 가져오기
+        var department = $('#m-department').val();
+        console.log(name, department); //크롬 개발자 도구 console.log 확인
+        $.post('/user', { name, department }, function (data) {
+            //data result 에 따른 if 분기문
+            if (data.result == 'success') {
+                //성공 = success 이미지 div id=result에 삽입
+                $('#result').empty();
+                $('#result').append(
+                    "<img src='/public/images/ok.png' width='100' height='100'></img>"
+                );
+                $('#result_str').empty();
+                $('#result_str').append("<p>"+JSON.stringify(data)+"</p>");
+
+            } else {
+                //실패 = failed 이미지 div id=result에 삽입
+                $('#result').empty();
+                $('#result').append(
+                    "<img src='/public/images/fail.png' width='100' height='100'></img>"
+                );
+            }
+            //$('#result').text(data.result);
+            //if문이 실행 된 다음에 받아온 data의 key result에 있는 value값 success가 출력될거임.
+        });
+        //user라는 경로로 name, department를 담아 function을 수행. function의 input 인자는 data.
+    });
+</script>
+
+</html>
